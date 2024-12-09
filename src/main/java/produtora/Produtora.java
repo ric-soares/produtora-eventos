@@ -137,11 +137,11 @@ public class Produtora {
         return resultado.toString();
     }
 
-    public List<Ingresso> listarIngressosCliente(Evento evento,String idCliente) {
+    public List<Ingresso> listarIngressos(Evento evento,String idCliente) {
         return evento.listarIngressosCliente(idCliente);
     }
 
-    public ArrayList<Ingresso> listarIngressosVendidos(String nomeEvento) {
+    public ArrayList<Ingresso> listarIngressos(String nomeEvento) {
         return tabelaEventoCliente.keySet().stream()
                 .filter(evento -> evento.getNome().equals(nomeEvento))
                 .findFirst()
@@ -149,7 +149,7 @@ public class Produtora {
                 .orElseThrow(() -> new IllegalArgumentException("Evento não encontrado"));
     }
 
-    public List<Ingresso> listarIngressosVendidos(String nomeEvento, CategoriaCliente categoriaCliente) {
+    public List<Ingresso> listarIngressos(String nomeEvento, CategoriaCliente categoriaCliente) {
         Evento e = tabelaEventoCliente.keySet().stream()
                 .filter(evento -> evento.getNome().equals(nomeEvento))
                 .findFirst()
