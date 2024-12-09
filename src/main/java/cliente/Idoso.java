@@ -4,7 +4,7 @@ import constantes.CategoriaCliente;
 
 public class Idoso extends PessoaFisica {
 
-    private double desconto;
+    private final double desconto;
 
     public Idoso(String nome, int idade, String cpf, String cidade) {
         super(nome, idade, cpf, cidade, CategoriaCliente.IDOSO);

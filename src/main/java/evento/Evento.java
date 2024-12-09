@@ -5,20 +5,22 @@ import constantes.CategoriaCliente;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Random;
 
 public class Evento {
 
+    private final String idEvento;
     private String nome;
     private String atracao;
     private String cidade;
     private int duracao;
     private int capacidade;
-    private double valorIng;
+    private final double valorIng;
     private int proxNumIng = 100;
-    private ArrayList<Ingresso> listaIng;
+    private final ArrayList<Ingresso> listaIng;
 
     public Evento(String nome, String atracao, String cidade, int duracao, int capacidade, double valorIng) {
-
+        this.idEvento = String.valueOf(new Random().nextInt(100_000, 999_999));
         this.nome = nome;
         this.atracao = atracao;
         this.cidade = cidade;
@@ -28,12 +30,12 @@ public class Evento {
         listaIng = new ArrayList<>();
     }
 
-    public double venderIng(Cliente cli, int qntIng) {
+    public double venderIng(Cliente cliente, int qntIng) {
 
-        double valor = valorIng - cli.getDesconto() * valorIng;
+        double valor = valorIng - cliente.getDesconto() * valorIng;
 
         for (int i=0 ; i < qntIng ; i++){
-            Ingresso ing = new Ingresso(proxNumIng, valor, cli);
+            Ingresso ing = new Ingresso(proxNumIng, valor, cliente);
             listaIng.add(ing);
             proxNumIng++;
         }
@@ -54,11 +56,15 @@ public class Evento {
 
     }
 
-    public List<Ingresso> listarIngressosCliente(String id) {
+    public List<Ingresso> listarIngressosCliente(String idCliente) {
+        if (!verificaCadastroCliente(idCliente)) {
+            throw new IllegalArgumentException("Cliente não cadastrado");
+        }
+
         return listaIng.stream()
                 .filter(i ->  i.getCliente()
                         .getId()
-                        .equals(id))
+                        .equals(idCliente))
                 .toList();
     }
 
@@ -96,6 +102,17 @@ public class Evento {
                 .mapToDouble(Ingresso::getValor)
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException("Nenhum ingresso encontrado para a categoria: " + categoria));
+    }
+
+    private boolean verificaCadastroCliente(String idCliente) {
+        boolean clienteCadastrado = listaIng.stream()
+                .anyMatch(i -> i.getCliente().getId().equals(idCliente));
+
+        return clienteCadastrado;
+    }
+
+    public String getIdEvento() {
+        return idEvento;
     }
 
     public String getNome() {

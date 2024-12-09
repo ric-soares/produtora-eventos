@@ -6,7 +6,7 @@ public abstract class Cliente {
 
     private String nome;
     private String cidade;
-    private CategoriaCliente categoria;
+    private final CategoriaCliente categoria;
 
     public Cliente(String nome, String cidade, CategoriaCliente categoria) {
         this.nome = nome;

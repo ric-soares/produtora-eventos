@@ -4,7 +4,7 @@ import constantes.CategoriaCliente;
 
 public class Estudante extends PessoaFisica {
 
-    private double desconto;
+    private final double desconto;
     private int numCarteiraEstudante;
 
     public Estudante(String nome, int idade, String cpf, String cidade, int numCarteirinha) {

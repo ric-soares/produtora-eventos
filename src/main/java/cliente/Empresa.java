@@ -4,7 +4,7 @@ import constantes.CategoriaCliente;
 
 public class Empresa extends Cliente {
 
-    private String cnpj;
+    private final String cnpj;
     private double desconto;
 
 

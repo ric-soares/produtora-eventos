@@ -11,9 +11,9 @@ import java.util.List;
 public class Produtora {
 
     private String nome;
-    private String cnpj;
-    private List<Cliente> clientesAssociados;
-    private HashMap<Evento, ArrayList<Cliente>> tabelaEventoCliente;
+    private final String cnpj;
+    private final List<Cliente> clientesAssociados;
+    private final HashMap<Evento, ArrayList<Cliente>> tabelaEventoCliente;
 
     public Produtora(String nome, String cnpj) {
         this.nome = nome;
@@ -39,12 +39,12 @@ public class Produtora {
         return false;
     }
 
-    public double venderIngressos(String idCliente, String nomeEvento, int qntIng)
+    public double venderIngressos(String idCliente, String idEvento, int qntIng)
             throws IllegalArgumentException {
 
         Cliente cliente = filtrarCliente(idCliente);
 
-        Evento evento = filtrarEvento(nomeEvento);
+        Evento evento = filtrarEvento(idEvento);
 
         if (evento.getQuantIngVendidos() + qntIng <= evento.getCapacidade()) {
             return evento.venderIng(cliente, qntIng);
@@ -53,13 +53,13 @@ public class Produtora {
         }
     }
 
-    public double valorIngresso(String nomeEvento) {
-        Evento e = filtrarEvento(nomeEvento);
+    public double valorIngresso(String idEvento) {
+        Evento e = filtrarEvento(idEvento);
         return e.getValorIngresso();
     }
 
-    public double valorIngresso(String nomeEvento, CategoriaCliente categoriaCliente) {
-        Evento e = filtrarEvento(nomeEvento);
+    public double valorIngresso(String idEvento, CategoriaCliente categoriaCliente) {
+        Evento e = filtrarEvento(idEvento);
         return e.getValorIngresso(categoriaCliente);
     }
 
@@ -69,13 +69,13 @@ public class Produtora {
                 .sum();
     }
 
-    public int totalIngressosVendidos(String nomeEvento) {
-        Evento e = filtrarEvento(nomeEvento);
+    public int totalIngressosVendidos(String idEvento) {
+        Evento e = filtrarEvento(idEvento);
         return e.getQuantIngVendidos();
     }
 
-    public double totalIngressosVendidos(String nomeEvento, CategoriaCliente categoriaCliente) {
-        Evento e = filtrarEvento(nomeEvento);
+    public double totalIngressosVendidos(String idEvento, CategoriaCliente categoriaCliente) {
+        Evento e = filtrarEvento(idEvento);
         return e.getQuantIngVendidos(categoriaCliente);
     }
 
@@ -85,27 +85,27 @@ public class Produtora {
                 .sum();
     }
 
-    public double receitaTotal(String nomeEvento) {
-        Evento e = filtrarEvento(nomeEvento);
+    public double receitaTotal(String idEvento) {
+        Evento e = filtrarEvento(idEvento);
         return e.valorTotalIngressos();
     }
 
-    public double receitaTotal(String nomeEvento, CategoriaCliente categoriaCliente) {
-        Evento e = filtrarEvento(nomeEvento);
+    public double receitaTotal(String idEvento, CategoriaCliente categoriaCliente) {
+        Evento e = filtrarEvento(idEvento);
         return e.valorTotalIngressos(categoriaCliente);
     }
 
-    public double receitaTotal(String nomeEvento, String idCliente) {
-        Evento e = filtrarEvento(nomeEvento);
+    public double receitaTotal(String idEvento, String idCliente) {
+        Evento e = filtrarEvento(idEvento);
         return e.getListaIng().stream()
                 .filter(evento -> evento.getCliente().getId().equals(idCliente))
                 .mapToDouble(Ingresso::getValor)
                 .sum();
     }
 
-    private Evento filtrarEvento(String nomeEvento) {
+    private Evento filtrarEvento(String idEvento) {
         return tabelaEventoCliente.keySet().stream()
-                .filter(evento -> evento.getNome().equals(nomeEvento))
+                .filter(evento -> evento.getIdEvento().equals(idEvento))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Evento não encontrado"));
     }
@@ -137,21 +137,25 @@ public class Produtora {
         return resultado.toString();
     }
 
-    public List<Ingresso> listarIngressos(Evento evento,String idCliente) {
-        return evento.listarIngressosCliente(idCliente);
+    public List<Ingresso> listarIngressos(String idEvento, String idCliente) {
+        return tabelaEventoCliente.keySet().stream()
+                .filter(evento -> evento.getIdEvento().equals(idEvento))
+                .findFirst()
+                .map(evento -> evento.listarIngressosCliente(idCliente))
+                .orElseThrow(() -> new IllegalArgumentException("Evento não encontrado"));
     }
 
-    public ArrayList<Ingresso> listarIngressos(String nomeEvento) {
+    public ArrayList<Ingresso> listarIngressos(String idEvento) {
         return tabelaEventoCliente.keySet().stream()
-                .filter(evento -> evento.getNome().equals(nomeEvento))
+                .filter(evento -> evento.getIdEvento().equals(idEvento))
                 .findFirst()
                 .map(Evento::getListaIng)
                 .orElseThrow(() -> new IllegalArgumentException("Evento não encontrado"));
     }
 
-    public List<Ingresso> listarIngressos(String nomeEvento, CategoriaCliente categoriaCliente) {
+    public List<Ingresso> listarIngressos(String idEvento, CategoriaCliente categoriaCliente) {
         Evento e = tabelaEventoCliente.keySet().stream()
-                .filter(evento -> evento.getNome().equals(nomeEvento))
+                .filter(evento -> evento.getIdEvento().equals(idEvento))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Evento não encontrado"));
 

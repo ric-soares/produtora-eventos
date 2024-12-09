@@ -4,24 +4,24 @@ import cliente.Cliente;
 
 public class Ingresso {
 
-    private int id;
+    private int idIngresso;
     private double valor;
-    private Cliente cliente;
+    private final Cliente cliente;
 
     public Ingresso (int id, double valor, Cliente cliente) {
 
-        this.id = id;
+        this.idIngresso = id;
         this.valor = valor;
         this.cliente = cliente;
 
     }
 
-    public int getId() {
-        return id;
+    public int getIdIngresso() {
+        return idIngresso;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setIdIngresso(int idIngresso) {
+        this.idIngresso = idIngresso;
     }
 
     public double getValor() {
@@ -39,7 +39,7 @@ public class Ingresso {
     @Override
     public String toString() {
         return "Ingresso - " +
-                "ID: " + id +
+                "ID: " + idIngresso +
                 "\n  Valor: R$" + String.format("%.2f", valor) +
                 " -  Comprador: " + cliente.getNome() +
                 "\n";
